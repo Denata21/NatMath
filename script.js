@@ -172,6 +172,14 @@ window.showMateri = function(materiId, kelasId) {
           </div>
         </details>
       </div>`;
+    if (b.tipe === 'gambar') return `
+      <img src="${b.url}" style="max-width:100%;border-radius:10px;margin:12px 0;">`;
+
+    if (b.tipe === 'file') return `
+      <a href="${b.url}" target="_blank" 
+        style="display:inline-flex;align-items:center;gap:8px;padding:12px 20px;background:#f0f4ff;color:#4f46e5;border-radius:10px;text-decoration:none;margin:8px 0;border:1px solid #c7d2fe;">
+        📎 ${b.namaFile || 'Download File'}
+      </a>`;
 
     return '';
   }).join('');
