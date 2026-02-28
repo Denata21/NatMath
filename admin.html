@@ -292,7 +292,7 @@
 
   window.loadKelas = async function() {
     const listEl = document.getElementById('listKelas');
-    const snapshot = await getDocs(collection(db, 'kelas'));
+    const snapshot = await getDocs(query(collection(db, 'kelas'), orderBy('nama')));
 
     if (snapshot.empty) {
       listEl.innerHTML = '<div class="empty-msg">Belum ada kelas.</div>';
