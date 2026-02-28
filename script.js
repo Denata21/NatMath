@@ -2,7 +2,7 @@ import { auth, db } from './firebase.js';
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 import { doc, getDoc, collection, getDocs, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-const API_KEY = 'API_KEY_LO';
+const API_KEY = 'AIzaSyDrxOBWDdf5O4CYgbR9pfqHmVBAVS4zVYc';
 let chatHistory = [];
 let currentKelas = null;
 
