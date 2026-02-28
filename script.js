@@ -1,30 +1,69 @@
 import { auth, db } from './firebase.js';
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { doc, getDoc, collection, getDocs, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-// API Key dari Google AI Studio
-const API_KEY = 'AIzaSyDrxOBWDdf5O4CYgbR9pfqHmVBAVS4zVYc';
+const API_KEY = 'API_KEY_LO';
 let chatHistory = [];
 let currentKelas = null;
 
 // ================================
-// DATA KELAS & MATERI
-// Nanti ini diambil dari database
-// Sekarang masih hardcode kosong
+// AUTH - Sambutan & Logout
 // ================================
-const data = {
-  kelas: [] // nanti diisi dari database
-};
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    if (userDoc.exists()) {
+      const nama = userDoc.data().nama || 'Pengguna';
+      const welcomeEl = document.getElementById('welcomeMsg');
+      if (welcomeEl) welcomeEl.textContent = `👋 Halo, ${nama}!`;
+    }
+  }
+});
+
+window.logoutUser = async function() {
+  await signOut(auth);
+  window.location.href = 'login.html';
+}
+
+// ================================
+// LOAD KELAS & MATERI DARI FIREBASE
+// ================================
+async function loadDataFromFirebase() {
+  const kelasSnap = await getDocs(query(collection(db, 'kelas'), orderBy('nama')));
+  const materiSnap = await getDocs(collection(db, 'materi'));
+
+  const kelasList = [];
+  kelasSnap.docs.forEach(d => {
+    if (d.data().visible) {
+      kelasList.push({
+        id: d.id,
+        ...d.data(),
+        materi: []
+      });
+    }
+  });
+
+  materiSnap.docs.forEach(d => {
+    const m = d.data();
+    if (!m.visible) return;
+    const kelas = kelasList.find(k => k.id === m.kelasId);
+    if (kelas) kelas.materi.push({ id: d.id, ...m });
+  });
+
+  return kelasList;
+}
 
 // ================================
 // RENDER NAVBAR TABS
 // ================================
-function renderNavTabs() {
+function renderNavTabs(kelasList) {
   const navTabs = document.getElementById('navTabs');
-  if (data.kelas.length === 0) {
+  if (kelasList.length === 0) {
     navTabs.innerHTML = '';
     return;
   }
-  navTabs.innerHTML = data.kelas.map((k, i) => `
-    <button class="tab-btn ${i === 0 ? 'active' : ''}" onclick="showKelas('${k.id}', this)">
+  navTabs.innerHTML = kelasList.map((k, i) => `
+    <button class="tab-btn ${i === 0 ? 'active' : ''}" onclick="window.showKelas('${k.id}')">
       ${k.nama}
     </button>
   `).join('');
@@ -33,8 +72,8 @@ function renderNavTabs() {
 // ================================
 // RENDER MATERI GRID
 // ================================
-function renderMateri(kelasId) {
-  const kelas = data.kelas.find(k => k.id === kelasId);
+function renderMateri(kelasId, kelasList) {
+  const kelas = kelasList.find(k => k.id === kelasId);
   const kelasContent = document.getElementById('kelasContent');
 
   if (!kelas || kelas.materi.length === 0) {
@@ -49,7 +88,7 @@ function renderMateri(kelasId) {
     <h2 class="kelas-header">${kelas.nama}</h2>
     <div class="materi-grid">
       ${kelas.materi.map(m => `
-        <div class="materi-card" onclick="showMateri('${m.id}', '${kelasId}')">
+        <div class="materi-card" onclick="window.showMateri('${m.id}', '${kelasId}')">
           <div class="materi-icon">${m.icon}</div>
           <div class="materi-title">${m.nama}</div>
         </div>
@@ -59,23 +98,41 @@ function renderMateri(kelasId) {
 }
 
 // ================================
+// INIT APP
+// ================================
+let globalKelasList = [];
+
+async function initApp() {
+  globalKelasList = await loadDataFromFirebase();
+  renderNavTabs(globalKelasList);
+  if (globalKelasList.length > 0) {
+    currentKelas = globalKelasList[0].id;
+    renderMateri(currentKelas, globalKelasList);
+  } else {
+    document.getElementById('kelasContent').innerHTML = `
+      <div class="empty-state">📭 Belum ada kelas.</div>
+    `;
+  }
+}
+
+// ================================
 // SHOW KELAS
 // ================================
-function showKelas(kelasId, el) {
+window.showKelas = function(kelasId) {
   document.getElementById('materi-desc').innerHTML = '';
   document.getElementById('page-materi').style.display = 'none';
   document.getElementById('homePage').style.display = 'block';
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  if (el) el.classList.add('active');
+  event.target.classList.add('active');
   currentKelas = kelasId;
-  renderMateri(kelasId);
+  renderMateri(kelasId, globalKelasList);
 }
 
 // ================================
 // SHOW MATERI
 // ================================
-function showMateri(materiId, kelasId) {
-  const kelas = data.kelas.find(k => k.id === kelasId);
+window.showMateri = function(materiId, kelasId) {
+  const kelas = globalKelasList.find(k => k.id === kelasId);
   const materi = kelas.materi.find(m => m.id === materiId);
 
   document.getElementById('homePage').style.display = 'none';
@@ -87,13 +144,13 @@ function showMateri(materiId, kelasId) {
 // ================================
 // BACK & HOME
 // ================================
-function backToKelas() {
+window.backToKelas = function() {
   document.getElementById('materi-desc').innerHTML = '';
   document.getElementById('page-materi').style.display = 'none';
   document.getElementById('homePage').style.display = 'block';
 }
 
-function goHome() {
+window.goHome = function() {
   document.getElementById('materi-desc').innerHTML = '';
   document.getElementById('page-materi').style.display = 'none';
   document.getElementById('homePage').style.display = 'block';
@@ -102,40 +159,23 @@ function goHome() {
 // ================================
 // LANDING PAGE
 // ================================
-function masukApp() {
+window.masukApp = function() {
   document.getElementById('landingPage').style.display = 'none';
   document.getElementById('mainApp').style.display = 'block';
   localStorage.setItem('sudahMasuk', 'true');
-  // Load kelas pertama kalau ada
-  if (data.kelas.length > 0) {
-    currentKelas = data.kelas[0].id;
-    renderMateri(currentKelas);
-  } else {
-    document.getElementById('kelasContent').innerHTML = `
-      <div class="empty-state">📭 Belum ada kelas. Tambahkan via admin nanti!</div>
-    `;
-  }
-  renderNavTabs();
+  initApp();
 }
 
 if (localStorage.getItem('sudahMasuk')) {
   document.getElementById('landingPage').style.display = 'none';
   document.getElementById('mainApp').style.display = 'block';
-  if (data.kelas.length > 0) {
-    currentKelas = data.kelas[0].id;
-    renderMateri(currentKelas);
-  } else {
-    document.getElementById('kelasContent').innerHTML = `
-      <div class="empty-state">📭 Belum ada kelas. Tambahkan via admin nanti!</div>
-    `;
-  }
-  renderNavTabs();
+  initApp();
 }
 
 // ================================
 // CHAT
 // ================================
-function toggleChat() {
+window.toggleChat = function() {
   const chatWindow = document.getElementById('chatWindow');
   chatWindow.style.display = chatWindow.style.display === 'none' ? 'block' : 'none';
 }
@@ -233,15 +273,4 @@ async function sendMessage() {
 document.getElementById('sendBtn').addEventListener('click', sendMessage);
 document.getElementById('userInput').addEventListener('keypress', function(e) {
   if (e.key === 'Enter') sendMessage();
-});
-
-// Sambutan user
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    const userDoc = await getDoc(doc(db, 'users', user.uid));
-    if (userDoc.exists()) {
-      const nama = userDoc.data().nama || 'Pengguna';
-      document.getElementById('welcomeMsg').textContent = `👋 Halo, ${nama}!`;
-    }
-  }
 });

@@ -299,3 +299,13 @@ button#sendBtn {
   border-radius: 12px;
   border: 1px dashed #ddd;
 }
+
+.logout-btn {
+  padding: 8px 16px;
+  background: #fee2e2;
+  color: #ef4444;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
