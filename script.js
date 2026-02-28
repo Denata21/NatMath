@@ -234,3 +234,14 @@ document.getElementById('sendBtn').addEventListener('click', sendMessage);
 document.getElementById('userInput').addEventListener('keypress', function(e) {
   if (e.key === 'Enter') sendMessage();
 });
+
+// Sambutan user
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    if (userDoc.exists()) {
+      const nama = userDoc.data().nama || 'Pengguna';
+      document.getElementById('welcomeMsg').textContent = `👋 Halo, ${nama}!`;
+    }
+  }
+});
