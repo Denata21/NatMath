@@ -10,20 +10,22 @@ let currentKelas = null;
 // AUTH - Sambutan & Logout
 // ================================
 onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    const userDoc = await getDoc(doc(db, 'users', user.uid));
-    if (userDoc.exists()) {
-      const nama = userDoc.data().nama || 'Pengguna';
-      const welcomeEl = document.getElementById('welcomeMsg');
-      if (welcomeEl) welcomeEl.textContent = `👋 Halo, ${nama}!`;
+  if (!user) {
+    // Kalau di index.html dan belum login, redirect ke login
+    if (!window.location.pathname.includes('login')) {
+      window.location.href = 'login.html';
     }
+    return;
   }
+  // Kalau udah login, load data
+  const userDoc = await getDoc(doc(db, 'users', user.uid));
+  if (userDoc.exists()) {
+    const nama = userDoc.data().nama || 'Pengguna';
+    const welcomeEl = document.getElementById('welcomeMsg');
+    if (welcomeEl) welcomeEl.textContent = `👋 Halo, ${nama}!`;
+  }
+  initApp();
 });
-
-window.logoutUser = async function() {
-  await signOut(auth);
-  window.location.href = 'login.html';
-}
 
 // ================================
 // LOAD KELAS & MATERI DARI FIREBASE
@@ -204,16 +206,7 @@ window.goHome = function() {
 // LANDING PAGE
 // ================================
 window.masukApp = function() {
-  document.getElementById('landingPage').style.display = 'none';
-  document.getElementById('mainApp').style.display = 'block';
-  localStorage.setItem('sudahMasuk', 'true');
-  initApp();
-}
-
-if (localStorage.getItem('sudahMasuk')) {
-  document.getElementById('landingPage').style.display = 'none';
-  document.getElementById('mainApp').style.display = 'block';
-  initApp();
+  window.location.href = 'login.html';
 }
 
 // ================================
