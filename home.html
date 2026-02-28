@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NatMath</title>
+  <link rel="stylesheet" href="./style.css">
+  <script>
+    MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=ab011179f1ca4007b1ad68f2328229bb"></script>
+</head>
+<body>
+
+<!-- MAIN APP -->
+<div id="mainApp">
+  <nav class="navbar">
+    <div class="nav-brand" onclick="goHome()" style="cursor:pointer;">📐 NatMath</div>
+    <div class="nav-tabs" id="navTabs"></div>
+    <button class="logout-btn" onclick="window.logoutUser()">Logout</button>
+  </nav>
+
+  <div class="main-content">
+    <div id="homePage">
+      <div id="welcomeMsg" style="margin-bottom: 16px; color: #4f46e5; font-size: 1.1rem; font-weight: bold;"></div>
+      <div id="kelasContent"></div>
+    </div>
+
+    <div id="page-materi" style="display:none;">
+      <button class="back-btn" onclick="backToKelas()">← Kembali</button>
+      <h2 id="materi-title"></h2>
+      <div class="materi-detail">
+        <div id="materi-desc"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FLOATING CHAT -->
+<button class="chat-fab" onclick="toggleChat()">🤖</button>
+<div class="chat-window" id="chatWindow" style="display:none;">
+  <div class="chat-header">
+    <span>🤖 NatMath AI</span>
+    <button onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-box" id="chatBox">
+    <div class="message bot">Halo! Tanya aku soal matematika ya!</div>
+  </div>
+  <div class="input-area">
+    <input type="text" id="userInput" placeholder="Ketik pertanyaan...">
+    <button id="sendBtn">➤</button>
+  </div>
+</div>
+
+<script type="module" src="firebase.js"></script>
+<script type="module" src="script.js"></script>
+
+</body>
+</html>

@@ -1,22 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
-
-  <head>
-    <meta charset="UTF-8">
-    <title>Website Belajar</title>
-    <link rel="stylesheet" href="./style.css">
-
-  </head>
-    
-  <body>
-  <script>
-MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
-</script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<script src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=ab011179f1ca4007b1ad68f2328229bb"></script>
-
-<!-- LANDING PAGE -->
-<div id="landingPage">
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NatMath</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .landing-content { text-align: center; color: white; padding: 40px; max-width: 500px; }
+    .landing-logo { font-size: 4rem; margin-bottom: 10px; }
+    h1 { font-size: 3rem; font-weight: bold; margin-bottom: 10px; }
+    .landing-subtitle { font-size: 1.2rem; opacity: 0.9; margin-bottom: 16px; }
+    .landing-desc { font-size: 0.95rem; opacity: 0.8; line-height: 1.7; margin-bottom: 28px; }
+    .landing-features { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
+    .landing-feature { background: rgba(255,255,255,0.15); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; }
+    .landing-btn { padding: 14px 36px; background: white; color: #4f46e5; border: none; border-radius: 50px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.2s; }
+    .landing-btn:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+  </style>
+</head>
+<body>
   <div class="landing-content">
     <div class="landing-logo">📐</div>
     <h1>NatMath</h1>
@@ -28,58 +37,7 @@ MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
       <div class="landing-feature">📚 Materi Lengkap</div>
       <div class="landing-feature">✏️ Contoh Soal</div>
     </div>
-    <button class="landing-btn" onclick="masukApp()">Mulai Belajar →</button>
+    <button class="landing-btn" onclick="window.location.href='login.html'">Mulai Belajar →</button>
   </div>
-</div>
-
-<!-- MAIN APP -->
-<div id="mainApp" style="display:none;">
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="nav-brand" onclick="goHome()" style="cursor:pointer;">📐 NatMath</div>
-    <div class="nav-tabs" id="navTabs"></div>
-    <button class="logout-btn" onclick="window.logoutUser()">Logout</button>
-  </nav>
-
-  <!-- CONTENT -->
-  <div class="main-content">
-
-  <!-- HOMEPAGE -->
-  <div id="homePage">
-    <div id="welcomeMsg" style="margin-bottom: 16px; color: #4f46e5; font-size: 1.1rem; font-weight: bold;"></div>
-    <div id="kelasContent"></div>
-  </div>
-
-    <!-- DETAIL MATERI -->
-    <div id="page-materi" style="display:none;">
-      <button class="back-btn" onclick="backToKelas()">← Kembali</button>
-      <h2 id="materi-title"></h2>
-      <div class="materi-detail">
-        <div id="materi-desc"></div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- FLOATING CHAT -->
-<button class="chat-fab" onclick="toggleChat()">🤖</button>
-<div class="chat-window" id="chatWindow" style="display:none;">
-  <div class="chat-header">
-    <span>🤖 NatMath AI</span>
-    <button onclick="toggleChat()">✕</button>
-  </div>
-  <div class="chat-box" id="chatBox">
-    <div class="message bot">Halo! Tanya aku soal matematika ya!</div>
-  </div>
-  <div class="input-area">
-    <input type="text" id="userInput" placeholder="Ketik pertanyaan...">
-    <button id="sendBtn">➤</button>
-  </div>
-</div>
-  <script type="module" src="firebase.js"></script>
-  <script type="module" src="script.js"></script>
-
-  </body>
-  
+</body>
 </html>
