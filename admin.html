@@ -151,6 +151,8 @@
       <button class="add-blok-btn" onclick="tambahBlok('teks')">➕ Teks</button>
       <button class="add-blok-btn" onclick="tambahBlok('video')">➕ Video YouTube</button>
       <button class="add-blok-btn" onclick="tambahBlok('soal')">➕ Contoh Soal</button>
+      <button class="add-blok-btn" onclick="tambahBlok('file')">➕ Upload File</button>
+      <button class="add-blok-btn" onclick="tambahBlok('gambar')">➕ Upload Gambar</button>
     </div>
     <div id="blokList"></div>
     <div class="modal-actions">
@@ -351,6 +353,8 @@
     if (tipe === 'teks') blok.teks = '';
     if (tipe === 'video') blok.url = '';
     if (tipe === 'soal') { blok.soal = ''; blok.pembahasan = ''; }
+    if (tipe === 'file') { blok.url = ''; blok.namaFile = ''; }
+    if (tipe === 'gambar') { blok.url = ''; }
     bloks.push(blok);
     renderBloks();
   }
@@ -405,13 +409,66 @@
           <label style="margin-top:8px;">Pembahasan</label>
           <textarea oninput="updateBlok(${b.id}, 'pembahasan', this.value)" placeholder="Ketik pembahasan...">${b.pembahasan}</textarea>
         </div>`;
+    if (b.tipe === 'file') return `
+        <div class="blok-item">
+            <div class="blok-header">
+            <span class="blok-type">📎 File</span>
+            <button class="hapus-blok" onclick="hapusBlok(${b.id})">✕ Hapus</button>
+            </div>
+            <label>Upload File (PDF, PPT, Word, dll)</label>
+            <input type="file" accept=".pdf,.ppt,.pptx,.doc,.docx" onchange="uploadFile(event, ${b.id}, 'file')">
+            ${b.url ? `<p style="margin-top:8px;color:#16a34a;font-size:0.85rem;">✅ File uploaded: ${b.namaFile}</p>` : ''}
+        </div>`;
+
+    if (b.tipe === 'gambar') return `
+        <div class="blok-item">
+            <div class="blok-header">
+            <span class="blok-type">🖼️ Gambar</span>
+            <button class="hapus-blok" onclick="hapusBlok(${b.id})">✕ Hapus</button>
+            </div>
+            <label>Upload Gambar</label>
+            <input type="file" accept="image/*" onchange="uploadFile(event, ${b.id}, 'gambar')">
+            ${b.url ? `<img src="${b.url}" style="margin-top:8px;max-width:100%;border-radius:8px;">` : ''}
+        </div>`;
     }).join('');
   }
-
+  
   window.updateBlok = function(id, field, value) {
     const blok = bloks.find(b => b.id === id);
     if (blok) blok[field] = value;
   }
+
+  const CLOUDINARY_CLOUD_NAME = 'dawoxzpwj';
+    const CLOUDINARY_UPLOAD_PRESET = 'NatMath';
+
+window.uploadFile = async function(event, blokId, tipe) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+  // Tampilin loading
+  event.target.parentElement.innerHTML += `<p style="color:#888;font-size:0.85rem;">⏳ Uploading...</p>`;
+
+  try {
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`, {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+
+    const blok = bloks.find(b => b.id === blokId);
+    if (blok) {
+      blok.url = data.secure_url;
+      if (tipe === 'file') blok.namaFile = file.name;
+    }
+    renderBloks();
+  } catch (error) {
+    alert('Upload gagal: ' + error.message);
+  }
+}
 
   window.simpanKonten = async function() {
     await updateDoc(doc(db, 'materi', currentEditMateriId), { bloks: bloks });
