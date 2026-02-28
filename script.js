@@ -1,12 +1,13 @@
 import { auth, db } from './firebase.js';
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-import { doc, getDoc, collection, getDocs, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+import { doc, getDoc, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
 let chatHistory = [];
 let currentKelas = null;
+let globalKelasList = [];
 
 // ================================
-// AUTH - Sambutan & Logout
+// AUTH
 // ================================
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
@@ -22,18 +23,13 @@ onAuthStateChanged(auth, async (user) => {
   initApp();
 });
 
-  // Kalau udah login, load data
-  const userDoc = await getDoc(doc(db, 'users', user.uid));
-  if (userDoc.exists()) {
-    const nama = userDoc.data().nama || 'Pengguna';
-    const welcomeEl = document.getElementById('welcomeMsg');
-    if (welcomeEl) welcomeEl.textContent = `👋 Halo, ${nama}!`;
-  }
-  initApp();
-;
+window.logoutUser = async function() {
+  await signOut(auth);
+  window.location.href = 'login.html';
+}
 
 // ================================
-// LOAD KELAS & MATERI DARI FIREBASE
+// LOAD DATA FIREBASE
 // ================================
 async function loadDataFromFirebase() {
   const kelasSnap = await getDocs(query(collection(db, 'kelas'), orderBy('nama')));
@@ -42,11 +38,7 @@ async function loadDataFromFirebase() {
   const kelasList = [];
   kelasSnap.docs.forEach(d => {
     if (d.data().visible) {
-      kelasList.push({
-        id: d.id,
-        ...d.data(),
-        materi: []
-      });
+      kelasList.push({ id: d.id, ...d.data(), materi: [] });
     }
   });
 
@@ -65,10 +57,7 @@ async function loadDataFromFirebase() {
 // ================================
 function renderNavTabs(kelasList) {
   const navTabs = document.getElementById('navTabs');
-  if (kelasList.length === 0) {
-    navTabs.innerHTML = '';
-    return;
-  }
+  if (kelasList.length === 0) { navTabs.innerHTML = ''; return; }
   navTabs.innerHTML = kelasList.map((k, i) => `
     <button class="tab-btn ${i === 0 ? 'active' : ''}" onclick="window.showKelas('${k.id}')">
       ${k.nama}
@@ -77,7 +66,7 @@ function renderNavTabs(kelasList) {
 }
 
 // ================================
-// RENDER MATERI GRID
+// RENDER MATERI
 // ================================
 function renderMateri(kelasId, kelasList) {
   const kelas = kelasList.find(k => k.id === kelasId);
@@ -107,8 +96,6 @@ function renderMateri(kelasId, kelasList) {
 // ================================
 // INIT APP
 // ================================
-let globalKelasList = [];
-
 async function initApp() {
   globalKelasList = await loadDataFromFirebase();
   renderNavTabs(globalKelasList);
@@ -116,9 +103,7 @@ async function initApp() {
     currentKelas = globalKelasList[0].id;
     renderMateri(currentKelas, globalKelasList);
   } else {
-    document.getElementById('kelasContent').innerHTML = `
-      <div class="empty-state">📭 Belum ada kelas.</div>
-    `;
+    document.getElementById('kelasContent').innerHTML = `<div class="empty-state">📭 Belum ada kelas.</div>`;
   }
 }
 
@@ -147,7 +132,6 @@ window.showMateri = function(materiId, kelasId) {
   document.getElementById('materi-title').textContent = materi.nama + ' - ' + kelas.nama;
 
   const bloks = materi.bloks || [];
-
   if (bloks.length === 0) {
     document.getElementById('materi-desc').innerHTML = '🚧 Konten segera hadir!';
     return;
@@ -155,39 +139,27 @@ window.showMateri = function(materiId, kelasId) {
 
   document.getElementById('materi-desc').innerHTML = bloks.map(b => {
     if (b.tipe === 'judul') return `<h3 style="color:#4f46e5;margin:20px 0 10px;">${b.teks}</h3>`;
-
     if (b.tipe === 'teks') return `<p style="margin-bottom:12px;line-height:1.7;">${b.teks.replace(/\n/g, '<br>')}</p>`;
-
     if (b.tipe === 'video') {
       const videoId = b.url.match(/(?:v=|youtu\.be\/)([^&\s]+)/)?.[1];
       if (!videoId) return '';
-      return `
-        <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;margin:16px 0;">
-          <iframe src="https://www.youtube.com/embed/${videoId}" 
-            style="position:absolute;top:0;left:0;width:100%;height:100%;"
-            frameborder="0" allowfullscreen></iframe>
-        </div>`;
+      return `<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;margin:16px 0;">
+        <iframe src="https://www.youtube.com/embed/${videoId}" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allowfullscreen></iframe>
+      </div>`;
     }
-
     if (b.tipe === 'soal') return `
       <div style="background:#f8f9ff;border:1px solid #e0e0e0;border-radius:10px;padding:16px;margin:12px 0;">
         <p><b>Soal:</b> ${b.soal}</p>
         <details style="margin-top:8px;">
           <summary style="color:#4f46e5;cursor:pointer;">Lihat Pembahasan</summary>
-          <div style="margin-top:8px;padding:10px;background:#ede9fe;border-radius:8px;">
-            ${b.pembahasan}
-          </div>
+          <div style="margin-top:8px;padding:10px;background:#ede9fe;border-radius:8px;">${b.pembahasan}</div>
         </details>
       </div>`;
-    if (b.tipe === 'gambar') return `
-      <img src="${b.url}" style="max-width:100%;border-radius:10px;margin:12px 0;">`;
-
+    if (b.tipe === 'gambar') return `<img src="${b.url}" style="max-width:100%;border-radius:10px;margin:12px 0;">`;
     if (b.tipe === 'file') return `
-      <a href="${b.url}" target="_blank" 
-        style="display:inline-flex;align-items:center;gap:8px;padding:12px 20px;background:#f0f4ff;color:#4f46e5;border-radius:10px;text-decoration:none;margin:8px 0;border:1px solid #c7d2fe;">
+      <a href="${b.url}" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 20px;background:#f0f4ff;color:#4f46e5;border-radius:10px;text-decoration:none;margin:8px 0;border:1px solid #c7d2fe;">
         📎 ${b.namaFile || 'Download File'}
       </a>`;
-
     return '';
   }).join('');
 }
@@ -205,13 +177,6 @@ window.goHome = function() {
   document.getElementById('materi-desc').innerHTML = '';
   document.getElementById('page-materi').style.display = 'none';
   document.getElementById('homePage').style.display = 'block';
-}
-
-// ================================
-// LANDING PAGE
-// ================================
-window.masukApp = function() {
-  window.location.href = 'login.html';
 }
 
 // ================================
@@ -257,19 +222,17 @@ async function sendMessage() {
   chatBox.scrollTop = chatBox.scrollHeight;
 
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          system_instruction: {
-            parts: [{ text: `Kamu adalah asisten matematika. Jawab dalam bahasa Indonesia. Jawab singkat maksimal 3-4 kalimat. Jika pertanyaan melibatkan fungsi matematika yang bisa digrafik, tambahkan di akhir jawaban: [GRAPH: tulis ekspresi latexnya saja].` }]
-          },
-          contents: chatHistory
-        })
-      }
-    );
+    // Pake API route Vercel biar API key aman
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: {
+          parts: [{ text: `Kamu adalah asisten matematika. Jawab dalam bahasa Indonesia. Jawab singkat maksimal 3-4 kalimat. Jika pertanyaan melibatkan fungsi matematika yang bisa digrafik, tambahkan di akhir jawaban: [GRAPH: tulis ekspresi latexnya saja].` }]
+        },
+        contents: chatHistory
+      })
+    });
 
     const data = await response.json();
 
