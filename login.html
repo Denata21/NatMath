@@ -138,16 +138,19 @@
   }
 
   // Login
-  window.login = async function() {
+ window.login = async function() {
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
     const errorEl = document.getElementById('loginError');
 
     try {
+      console.log('Mencoba login dengan:', email);
       const userCred = await signInWithEmailAndPassword(auth, email, password);
+      console.log('Login berhasil, UID:', userCred.user.uid);
       
-      // Cek role di Firestore
       const userDoc = await getDoc(doc(db, 'users', userCred.user.uid));
+      console.log('User doc exists:', userDoc.exists());
+      console.log('User data:', userDoc.data());
       
       if (userDoc.exists() && userDoc.data().role === 'admin') {
         window.location.href = 'admin.html';
@@ -155,6 +158,8 @@
         window.location.href = 'index.html';
       }
     } catch (error) {
+      console.log('Error code:', error.code);
+      console.log('Error message:', error.message);
       errorEl.style.display = 'block';
     }
   }
