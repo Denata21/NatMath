@@ -6,7 +6,7 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.0/firebase
 // Config Firebase lo
 const firebaseConfig = {
   apiKey: "AIzaSyCYFtqhUq0aTLvPWBON7dVEz6iSafQvs-Y",
-  authDomain: "natmath-2110.firebaseapp.com",
+  authDomain: "nat-math.vercel.app",
   projectId: "natmath-2110",
   storageBucket: "natmath-2110.firebasestorage.app",
   messagingSenderId: "879310505464",
