@@ -453,7 +453,7 @@ window.uploadFile = async function(event, blokId, tipe) {
   event.target.parentElement.innerHTML += `<p style="color:#888;font-size:0.85rem;">⏳ Uploading...</p>`;
 
   try {
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`, {
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/raww/upload`, {
       method: 'POST',
       body: formData
     });
