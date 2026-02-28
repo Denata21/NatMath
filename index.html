@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Website Belajar</title>
+    <link rel="stylesheet" href="./style.css">
+
+  </head>
+    
+  <body>
+  <script>
+MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=ab011179f1ca4007b1ad68f2328229bb"></script>
+
+<!-- LANDING PAGE -->
+<div id="landingPage">
+  <div class="landing-content">
+    <div class="landing-logo">📐</div>
+    <h1>NatMath</h1>
+    <p class="landing-subtitle">Platform Belajar Matematika Interaktif</p>
+    <p class="landing-desc">Belajar matematika jadi lebih mudah dan menyenangkan dengan bantuan AI. Tersedia materi lengkap untuk semua kelas.</p>
+    <div class="landing-features">
+      <div class="landing-feature">🤖 Chatbot AI</div>
+      <div class="landing-feature">📊 Grafik Interaktif</div>
+      <div class="landing-feature">📚 Materi Lengkap</div>
+      <div class="landing-feature">✏️ Contoh Soal</div>
+    </div>
+    <button class="landing-btn" onclick="masukApp()">Mulai Belajar →</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp" style="display:none;">
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-brand" onclick="goHome()" style="cursor:pointer;">📐 NatMath</div>
+    <div class="nav-tabs" id="navTabs"></div>
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="main-content">
+
+    <!-- HOMEPAGE -->
+    <div id="homePage">
+      <div id="kelasContent"></div>
+    </div>
+
+    <!-- DETAIL MATERI -->
+    <div id="page-materi" style="display:none;">
+      <button class="back-btn" onclick="backToKelas()">← Kembali</button>
+      <h2 id="materi-title"></h2>
+      <div class="materi-detail">
+        <div id="materi-desc"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FLOATING CHAT -->
+<button class="chat-fab" onclick="toggleChat()">🤖</button>
+<div class="chat-window" id="chatWindow" style="display:none;">
+  <div class="chat-header">
+    <span>🤖 NatMath AI</span>
+    <button onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-box" id="chatBox">
+    <div class="message bot">Halo! Tanya aku soal matematika ya!</div>
+  </div>
+  <div class="input-area">
+    <input type="text" id="userInput" placeholder="Ketik pertanyaan...">
+    <button id="sendBtn">➤</button>
+  </div>
+</div>
+    <script  src="./script.js"></script>
+
+  </body>
+  
+</html>
