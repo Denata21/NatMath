@@ -138,7 +138,43 @@ window.showMateri = function(materiId, kelasId) {
   document.getElementById('homePage').style.display = 'none';
   document.getElementById('page-materi').style.display = 'block';
   document.getElementById('materi-title').textContent = materi.nama + ' - ' + kelas.nama;
-  document.getElementById('materi-desc').innerHTML = materi.konten || '🚧 Konten segera hadir!';
+
+  const bloks = materi.bloks || [];
+
+  if (bloks.length === 0) {
+    document.getElementById('materi-desc').innerHTML = '🚧 Konten segera hadir!';
+    return;
+  }
+
+  document.getElementById('materi-desc').innerHTML = bloks.map(b => {
+    if (b.tipe === 'judul') return `<h3 style="color:#4f46e5;margin:20px 0 10px;">${b.teks}</h3>`;
+
+    if (b.tipe === 'teks') return `<p style="margin-bottom:12px;line-height:1.7;">${b.teks.replace(/\n/g, '<br>')}</p>`;
+
+    if (b.tipe === 'video') {
+      const videoId = b.url.match(/(?:v=|youtu\.be\/)([^&\s]+)/)?.[1];
+      if (!videoId) return '';
+      return `
+        <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;margin:16px 0;">
+          <iframe src="https://www.youtube.com/embed/${videoId}" 
+            style="position:absolute;top:0;left:0;width:100%;height:100%;"
+            frameborder="0" allowfullscreen></iframe>
+        </div>`;
+    }
+
+    if (b.tipe === 'soal') return `
+      <div style="background:#f8f9ff;border:1px solid #e0e0e0;border-radius:10px;padding:16px;margin:12px 0;">
+        <p><b>Soal:</b> ${b.soal}</p>
+        <details style="margin-top:8px;">
+          <summary style="color:#4f46e5;cursor:pointer;">Lihat Pembahasan</summary>
+          <div style="margin-top:8px;padding:10px;background:#ede9fe;border-radius:8px;">
+            ${b.pembahasan}
+          </div>
+        </details>
+      </div>`;
+
+    return '';
+  }).join('');
 }
 
 // ================================

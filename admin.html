@@ -8,7 +8,6 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', sans-serif; background: #f5f7ff; }
 
-    /* NAVBAR */
     .navbar {
       height: 60px;
       background: white;
@@ -24,157 +23,66 @@
     }
     .nav-brand { font-size: 1.3rem; font-weight: bold; color: #4f46e5; }
     .nav-brand span { color: #ef4444; }
-    .logout-btn {
-      padding: 8px 16px;
-      background: #fee2e2;
-      color: #ef4444;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+    .logout-btn { padding: 8px 16px; background: #fee2e2; color: #ef4444; border: none; border-radius: 8px; cursor: pointer; }
 
-    /* LAYOUT */
-    .admin-container {
-      margin-top: 80px;
-      padding: 24px;
-      max-width: 900px;
-      margin-left: auto;
-      margin-right: auto;
-    }
+    .admin-container { margin-top: 80px; padding: 24px; max-width: 900px; margin-left: auto; margin-right: auto; }
+    .admin-container h2 { color: #4f46e5; margin-bottom: 24px; }
 
-    .admin-container h2 {
-      color: #4f46e5;
-      margin-bottom: 24px;
-    }
+    .admin-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+    .admin-tab { padding: 10px 20px; border: none; border-radius: 20px; background: #f0f4ff; color: #4f46e5; cursor: pointer; font-size: 0.9rem; }
+    .admin-tab.active { background: #4f46e5; color: white; font-weight: bold; }
 
-    /* TABS */
-    .admin-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 24px;
-    }
-
-    .admin-tab {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 20px;
-      background: #f0f4ff;
-      color: #4f46e5;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-
-    .admin-tab.active {
-      background: #4f46e5;
-      color: white;
-      font-weight: bold;
-    }
-
-    /* SECTION */
     .admin-section { display: none; }
     .admin-section.active { display: block; }
 
-    .section-card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 16px;
-      border: 1px solid #e0e0e0;
-    }
+    .section-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid #e0e0e0; }
+    .section-card h3 { color: #333; margin-bottom: 16px; font-size: 1rem; }
 
-    .section-card h3 {
-      color: #333;
-      margin-bottom: 16px;
-      font-size: 1rem;
-    }
+    .form-row { display: flex; gap: 8px; margin-bottom: 12px; }
+    .form-row input, .form-row select { flex: 1; padding: 10px 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 0.9rem; outline: none; }
+    .form-row input:focus, .form-row select:focus { border-color: #4f46e5; }
+    .add-btn { padding: 10px 20px; background: #4f46e5; color: white; border: none; border-radius: 8px; cursor: pointer; white-space: nowrap; }
 
-    /* FORM */
-    .form-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .form-row input, .form-row select {
-      flex: 1;
-      padding: 10px 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      outline: none;
-    }
-
-    .form-row input:focus, .form-row select:focus {
-      border-color: #4f46e5;
-    }
-
-    .add-btn {
-      padding: 10px 20px;
-      background: #4f46e5;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    /* LIST */
-    .item-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid #f0f0f0;
-    }
-
+    .item-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
     .item-row:last-child { border-bottom: none; }
-
     .item-info { display: flex; align-items: center; gap: 10px; }
     .item-icon { font-size: 1.3rem; }
     .item-name { font-size: 0.95rem; color: #333; }
     .item-sub { font-size: 0.8rem; color: #888; }
+    .item-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
-    .item-actions { display: flex; gap: 8px; }
-
-    .toggle-btn {
-      padding: 6px 12px;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: bold;
-    }
-
+    .toggle-btn { padding: 6px 12px; border: none; border-radius: 20px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
     .toggle-btn.visible { background: #dcfce7; color: #16a34a; }
     .toggle-btn.hidden { background: #fef9c3; color: #ca8a04; }
+    .delete-btn { padding: 6px 12px; background: #fee2e2; color: #ef4444; border: none; border-radius: 20px; cursor: pointer; font-size: 0.8rem; }
+    .edit-btn { padding: 6px 12px; background: #e0e7ff; color: #4f46e5; border: none; border-radius: 20px; cursor: pointer; font-size: 0.8rem; }
 
-    .delete-btn {
-      padding: 6px 12px;
-      background: #fee2e2;
-      color: #ef4444;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 0.8rem;
-    }
-
-    /* MURID */
-    .murid-badge {
-      padding: 4px 10px;
-      background: #ede9fe;
-      color: #4f46e5;
-      border-radius: 20px;
-      font-size: 0.8rem;
-    }
-
-    .empty-msg {
-      text-align: center;
-      color: #aaa;
-      padding: 20px;
-      font-size: 0.9rem;
-    }
-
+    .murid-badge { padding: 4px 10px; background: #ede9fe; color: #4f46e5; border-radius: 20px; font-size: 0.8rem; }
+    .empty-msg { text-align: center; color: #aaa; padding: 20px; font-size: 0.9rem; }
     .loading { text-align: center; color: #888; padding: 20px; }
+
+    /* MODAL */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 999; }
+    .modal-box { background: white; border-radius: 16px; padding: 28px; width: 700px; max-height: 85vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+    .modal-box h3 { color: #4f46e5; margin-bottom: 20px; }
+
+    .blok-item { background: #f8f9ff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 14px; margin-bottom: 10px; }
+    .blok-item label { font-size: 0.8rem; color: #888; margin-bottom: 4px; display: block; }
+    .blok-item input, .blok-item textarea { width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 0.9rem; outline: none; font-family: inherit; }
+    .blok-item textarea { height: 100px; resize: vertical; }
+    .blok-item input:focus, .blok-item textarea:focus { border-color: #4f46e5; }
+
+    .blok-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .blok-type { font-size: 0.8rem; font-weight: bold; color: #4f46e5; }
+    .hapus-blok { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 0.85rem; }
+
+    .add-blok-btns { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .add-blok-btn { padding: 8px 14px; background: #f0f4ff; color: #4f46e5; border: 1px solid #c7d2fe; border-radius: 8px; cursor: pointer; font-size: 0.85rem; }
+    .add-blok-btn:hover { background: #4f46e5; color: white; }
+
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+    .save-btn { padding: 10px 24px; background: #4f46e5; color: white; border: none; border-radius: 8px; cursor: pointer; }
+    .cancel-btn { padding: 10px 24px; background: #f0f0f0; color: #555; border: none; border-radius: 8px; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -187,7 +95,6 @@
 <div class="admin-container">
   <h2>⚙️ Panel Admin</h2>
 
-  <!-- TABS -->
   <div class="admin-tabs">
     <button class="admin-tab active" onclick="switchAdminTab('kelas', this)">📚 Kelas</button>
     <button class="admin-tab" onclick="switchAdminTab('materi', this)">📖 Materi</button>
@@ -214,9 +121,7 @@
     <div class="section-card">
       <h3>➕ Tambah Materi Baru</h3>
       <div class="form-row">
-        <select id="inputKelasMateri">
-          <option value="">Pilih Kelas...</option>
-        </select>
+        <select id="inputKelasMateri"><option value="">Pilih Kelas...</option></select>
         <input type="text" id="inputNamaMateri" placeholder="Nama materi">
         <input type="text" id="inputIconMateri" placeholder="Icon (emoji)">
         <button class="add-btn" onclick="tambahMateri()">Tambah</button>
@@ -235,36 +140,46 @@
       <div id="listMurid"><div class="loading">Memuat...</div></div>
     </div>
   </div>
+</div>
 
+<!-- MODAL EDITOR KONTEN -->
+<div class="modal-overlay" id="modalEditor" style="display:none;">
+  <div class="modal-box">
+    <h3>✏️ Edit Konten: <span id="modalMateriNama"></span></h3>
+    <div class="add-blok-btns">
+      <button class="add-blok-btn" onclick="tambahBlok('judul')">➕ Judul</button>
+      <button class="add-blok-btn" onclick="tambahBlok('teks')">➕ Teks</button>
+      <button class="add-blok-btn" onclick="tambahBlok('video')">➕ Video YouTube</button>
+      <button class="add-blok-btn" onclick="tambahBlok('soal')">➕ Contoh Soal</button>
+    </div>
+    <div id="blokList"></div>
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="tutupModal()">Batal</button>
+      <button class="save-btn" onclick="simpanKonten()">💾 Simpan</button>
+    </div>
+  </div>
 </div>
 
 <script type="module">
   import { auth, db } from './firebase.js';
   import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
   import {
-    collection, addDoc, getDocs, doc,
+    collection, addDoc, getDocs, doc, getDoc,
     updateDoc, deleteDoc, query, where, orderBy
   } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-  // Cek auth, kalau bukan admin redirect
   onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      window.location.href = 'login.html';
-      return;
-    }
-    // Load semua data
+    if (!user) { window.location.href = 'login.html'; return; }
     loadKelas();
     loadMateri();
     loadMurid();
   });
 
-  // Logout
   document.getElementById('logoutBtn').addEventListener('click', async () => {
     await signOut(auth);
     window.location.href = 'login.html';
   });
 
-  // Switch tab
   window.switchAdminTab = function(tab, el) {
     document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
@@ -272,19 +187,11 @@
     el.classList.add('active');
   }
 
-  // ================================
   // KELAS
-  // ================================
   window.tambahKelas = async function() {
     const nama = document.getElementById('inputNamaKelas').value.trim();
     if (!nama) return alert('Nama kelas tidak boleh kosong!');
-
-    await addDoc(collection(db, 'kelas'), {
-      nama: nama,
-      visible: true,
-      createdAt: new Date()
-    });
-
+    await addDoc(collection(db, 'kelas'), { nama, visible: true, createdAt: new Date() });
     document.getElementById('inputNamaKelas').value = '';
     loadKelas();
     loadSelectKelas();
@@ -293,33 +200,23 @@
   window.loadKelas = async function() {
     const listEl = document.getElementById('listKelas');
     const snapshot = await getDocs(query(collection(db, 'kelas'), orderBy('nama')));
-
-    if (snapshot.empty) {
-      listEl.innerHTML = '<div class="empty-msg">Belum ada kelas.</div>';
-      return;
-    }
-
+    if (snapshot.empty) { listEl.innerHTML = '<div class="empty-msg">Belum ada kelas.</div>'; return; }
     listEl.innerHTML = snapshot.docs.map(d => {
       const k = d.data();
       return `
         <div class="item-row">
           <div class="item-info">
             <div class="item-icon">📚</div>
-            <div>
-              <div class="item-name">${k.nama}</div>
-            </div>
+            <div><div class="item-name">${k.nama}</div></div>
           </div>
           <div class="item-actions">
-            <button class="toggle-btn ${k.visible ? 'visible' : 'hidden'}"
-              onclick="toggleKelas('${d.id}', ${k.visible})">
+            <button class="toggle-btn ${k.visible ? 'visible' : 'hidden'}" onclick="toggleKelas('${d.id}', ${k.visible})">
               ${k.visible ? '👁️ Tampil' : '🙈 Disembunyikan'}
             </button>
             <button class="delete-btn" onclick="hapusKelas('${d.id}')">🗑️ Hapus</button>
           </div>
-        </div>
-      `;
+        </div>`;
     }).join('');
-
     loadSelectKelas();
   }
 
@@ -329,9 +226,8 @@
   }
 
   window.hapusKelas = async function(id) {
-    if (!confirm('Yakin hapus kelas ini? Materi di dalamnya juga ikut terhapus!')) return;
+    if (!confirm('Yakin hapus kelas ini?')) return;
     await deleteDoc(doc(db, 'kelas', id));
-    // Hapus semua materi di kelas ini
     const materiSnap = await getDocs(query(collection(db, 'materi'), where('kelasId', '==', id)));
     materiSnap.forEach(async (d) => await deleteDoc(doc(db, 'materi', d.id)));
     loadKelas();
@@ -340,32 +236,20 @@
 
   async function loadSelectKelas() {
     const select = document.getElementById('inputKelasMateri');
-    const snapshot = await getDocs(collection(db, 'kelas'));
+    const snapshot = await getDocs(query(collection(db, 'kelas'), orderBy('nama')));
     select.innerHTML = '<option value="">Pilih Kelas...</option>';
     snapshot.docs.forEach(d => {
       select.innerHTML += `<option value="${d.id}">${d.data().nama}</option>`;
     });
   }
 
-  // ================================
   // MATERI
-  // ================================
   window.tambahMateri = async function() {
     const kelasId = document.getElementById('inputKelasMateri').value;
     const nama = document.getElementById('inputNamaMateri').value.trim();
     const icon = document.getElementById('inputIconMateri').value.trim() || '📄';
-
     if (!kelasId || !nama) return alert('Pilih kelas dan isi nama materi!');
-
-    await addDoc(collection(db, 'materi'), {
-      kelasId: kelasId,
-      nama: nama,
-      icon: icon,
-      visible: true,
-      konten: '',
-      createdAt: new Date()
-    });
-
+    await addDoc(collection(db, 'materi'), { kelasId, nama, icon, visible: true, bloks: [], createdAt: new Date() });
     document.getElementById('inputNamaMateri').value = '';
     document.getElementById('inputIconMateri').value = '';
     loadMateri();
@@ -375,15 +259,9 @@
     const listEl = document.getElementById('listMateri');
     const kelasSnap = await getDocs(collection(db, 'kelas'));
     const materiSnap = await getDocs(collection(db, 'materi'));
-
-    if (materiSnap.empty) {
-      listEl.innerHTML = '<div class="empty-msg">Belum ada materi.</div>';
-      return;
-    }
-
+    if (materiSnap.empty) { listEl.innerHTML = '<div class="empty-msg">Belum ada materi.</div>'; return; }
     const kelasMap = {};
     kelasSnap.docs.forEach(d => kelasMap[d.id] = d.data().nama);
-
     listEl.innerHTML = materiSnap.docs.map(d => {
       const m = d.data();
       return `
@@ -396,14 +274,13 @@
             </div>
           </div>
           <div class="item-actions">
-            <button class="toggle-btn ${m.visible ? 'visible' : 'hidden'}"
-              onclick="toggleMateri('${d.id}', ${m.visible})">
+            <button class="toggle-btn ${m.visible ? 'visible' : 'hidden'}" onclick="toggleMateri('${d.id}', ${m.visible})">
               ${m.visible ? '👁️ Tampil' : '🙈 Disembunyikan'}
             </button>
+            <button class="edit-btn" onclick="editMateri('${d.id}')">✏️ Edit</button>
             <button class="delete-btn" onclick="hapusMateri('${d.id}')">🗑️ Hapus</button>
           </div>
-        </div>
-      `;
+        </div>`;
     }).join('');
   }
 
@@ -418,18 +295,11 @@
     loadMateri();
   }
 
-  // ================================
   // MURID
-  // ================================
   window.loadMurid = async function() {
     const listEl = document.getElementById('listMurid');
     const snapshot = await getDocs(query(collection(db, 'users'), where('role', '==', 'murid')));
-
-    if (snapshot.empty) {
-      listEl.innerHTML = '<div class="empty-msg">Belum ada murid yang daftar.</div>';
-      return;
-    }
-
+    if (snapshot.empty) { listEl.innerHTML = '<div class="empty-msg">Belum ada murid yang daftar.</div>'; return; }
     listEl.innerHTML = snapshot.docs.map(d => {
       const u = d.data();
       return `
@@ -445,8 +315,7 @@
             <span class="murid-badge">Murid</span>
             <button class="delete-btn" onclick="hapusMurid('${d.id}')">🗑️ Hapus</button>
           </div>
-        </div>
-      `;
+        </div>`;
     }).join('');
   }
 
@@ -456,6 +325,99 @@
     loadMurid();
   }
 
+  // EDITOR KONTEN
+  let currentEditMateriId = null;
+  let bloks = [];
+
+  window.editMateri = async function(id) {
+    currentEditMateriId = id;
+    const materiDoc = await getDoc(doc(db, 'materi', id));
+    const materi = materiDoc.data();
+    document.getElementById('modalMateriNama').textContent = materi.nama;
+    bloks = materi.bloks || [];
+    renderBloks();
+    document.getElementById('modalEditor').style.display = 'flex';
+  }
+
+  window.tutupModal = function() {
+    document.getElementById('modalEditor').style.display = 'none';
+    currentEditMateriId = null;
+    bloks = [];
+  }
+
+  window.tambahBlok = function(tipe) {
+    const blok = { tipe, id: Date.now() };
+    if (tipe === 'judul') blok.teks = '';
+    if (tipe === 'teks') blok.teks = '';
+    if (tipe === 'video') blok.url = '';
+    if (tipe === 'soal') { blok.soal = ''; blok.pembahasan = ''; }
+    bloks.push(blok);
+    renderBloks();
+  }
+
+  window.hapusBlok = function(id) {
+    bloks = bloks.filter(b => b.id !== id);
+    renderBloks();
+  }
+
+  function renderBloks() {
+    const list = document.getElementById('blokList');
+    if (bloks.length === 0) {
+      list.innerHTML = '<p style="color:#aaa;text-align:center;padding:20px;">Belum ada konten. Tambah blok di atas!</p>';
+      return;
+    }
+    list.innerHTML = bloks.map(b => {
+      if (b.tipe === 'judul') return `
+        <div class="blok-item">
+          <div class="blok-header">
+            <span class="blok-type">📌 Judul Section</span>
+            <button class="hapus-blok" onclick="hapusBlok(${b.id})">✕ Hapus</button>
+          </div>
+          <label>Teks Judul</label>
+          <input type="text" value="${b.teks}" oninput="updateBlok(${b.id}, 'teks', this.value)" placeholder="Contoh: Pengertian Aljabar">
+        </div>`;
+      if (b.tipe === 'teks') return `
+        <div class="blok-item">
+          <div class="blok-header">
+            <span class="blok-type">📝 Teks</span>
+            <button class="hapus-blok" onclick="hapusBlok(${b.id})">✕ Hapus</button>
+          </div>
+          <label>Isi Teks</label>
+          <textarea oninput="updateBlok(${b.id}, 'teks', this.value)" placeholder="Ketik penjelasan materi...">${b.teks}</textarea>
+        </div>`;
+      if (b.tipe === 'video') return `
+        <div class="blok-item">
+          <div class="blok-header">
+            <span class="blok-type">🎬 Video YouTube</span>
+            <button class="hapus-blok" onclick="hapusBlok(${b.id})">✕ Hapus</button>
+          </div>
+          <label>URL YouTube</label>
+          <input type="text" value="${b.url}" oninput="updateBlok(${b.id}, 'url', this.value)" placeholder="https://www.youtube.com/watch?v=...">
+        </div>`;
+      if (b.tipe === 'soal') return `
+        <div class="blok-item">
+          <div class="blok-header">
+            <span class="blok-type">✏️ Contoh Soal</span>
+            <button class="hapus-blok" onclick="hapusBlok(${b.id})">✕ Hapus</button>
+          </div>
+          <label>Soal</label>
+          <textarea oninput="updateBlok(${b.id}, 'soal', this.value)" placeholder="Ketik soal...">${b.soal}</textarea>
+          <label style="margin-top:8px;">Pembahasan</label>
+          <textarea oninput="updateBlok(${b.id}, 'pembahasan', this.value)" placeholder="Ketik pembahasan...">${b.pembahasan}</textarea>
+        </div>`;
+    }).join('');
+  }
+
+  window.updateBlok = function(id, field, value) {
+    const blok = bloks.find(b => b.id === id);
+    if (blok) blok[field] = value;
+  }
+
+  window.simpanKonten = async function() {
+    await updateDoc(doc(db, 'materi', currentEditMateriId), { bloks: bloks });
+    tutupModal();
+    alert('Konten berhasil disimpan! ✅');
+  }
 </script>
 
 </body>
