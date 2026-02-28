@@ -1,3 +1,5 @@
+import { auth, db } from './firebase.js';
+
 // API Key dari Google AI Studio
 const API_KEY = 'AIzaSyDrxOBWDdf5O4CYgbR9pfqHmVBAVS4zVYc';
 let chatHistory = [];

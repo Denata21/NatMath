@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NatMath - Login</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-box {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      width: 360px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    .login-box h1 { color: #4f46e5; margin-bottom: 8px; }
+    .login-box p { color: #888; margin-bottom: 24px; font-size: 0.9rem; }
+    .form-group { margin-bottom: 16px; text-align: left; }
+    .form-group label { font-size: 0.85rem; color: #555; margin-bottom: 4px; display: block; }
+    .form-group input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .form-group input:focus { border-color: #4f46e5; }
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    .login-btn:hover { background: #4338ca; }
+    .error-msg { color: #ef4444; font-size: 0.85rem; margin-bottom: 12px; display: none; }
+    .back-btn {
+      background: none;
+      border: none;
+      color: #4f46e5;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .tab-btns { display: flex; gap: 8px; margin-bottom: 24px; }
+    .tab-btns button {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #4f46e5;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      background: none;
+      color: #4f46e5;
+    }
+    .tab-btns button.active {
+      background: #4f46e5;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-box">
+  <h1>📐 NatMath</h1>
+  <p>Masuk ke akun kamu</p>
+
+  <!-- TAB LOGIN / REGISTER -->
+  <div class="tab-btns">
+    <button class="active" onclick="switchTab('login', this)">Login</button>
+    <button onclick="switchTab('register', this)">Daftar</button>
+  </div>
+
+  <!-- LOGIN FORM -->
+  <div id="loginForm">
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="email@gmail.com">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="Password...">
+    </div>
+    <p class="error-msg" id="loginError">Email atau password salah!</p>
+    <button class="login-btn" onclick="login()">Masuk</button>
+  </div>
+
+  <!-- REGISTER FORM -->
+  <div id="registerForm" style="display:none;">
+    <div class="form-group">
+      <label>Nama</label>
+      <input type="text" id="regNama" placeholder="Nama lengkap...">
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="regEmail" placeholder="email@gmail.com">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="regPassword" placeholder="Minimal 6 karakter...">
+    </div>
+    <p class="error-msg" id="registerError"></p>
+    <button class="login-btn" onclick="register()">Daftar</button>
+  </div>
+
+  <button class="back-btn" onclick="window.location.href='index.html'">← Kembali ke NatMath</button>
+</div>
+
+<script type="module">
+  import { auth, db } from './firebase.js';
+  import { 
+    signInWithEmailAndPassword, 
+    createUserWithEmailAndPassword 
+  } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+  import { 
+    doc, setDoc, getDoc 
+  } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+  // Switch tab login/register
+  window.switchTab = function(tab, el) {
+    document.querySelectorAll('.tab-btns button').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+    document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+  }
+
+  // Login
+  window.login = async function() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    const errorEl = document.getElementById('loginError');
+
+    try {
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      
+      // Cek role di Firestore
+      const userDoc = await getDoc(doc(db, 'users', userCred.user.uid));
+      
+      if (userDoc.exists() && userDoc.data().role === 'admin') {
+        window.location.href = 'admin.html';
+      } else {
+        window.location.href = 'index.html';
+      }
+    } catch (error) {
+      errorEl.style.display = 'block';
+    }
+  }
+
+  // Register murid
+  window.register = async function() {
+    const nama = document.getElementById('regNama').value;
+    const email = document.getElementById('regEmail').value;
+    const password = document.getElementById('regPassword').value;
+    const errorEl = document.getElementById('registerError');
+
+    try {
+      const userCred = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // Simpan data murid ke Firestore
+      await setDoc(doc(db, 'users', userCred.user.uid), {
+        nama: nama,
+        email: email,
+        role: 'murid'
+      });
+
+      window.location.href = 'index.html';
+    } catch (error) {
+      errorEl.style.display = 'block';
+      errorEl.textContent = error.message;
+    }
+  }
+</script>
+
+</body>
+</html>
