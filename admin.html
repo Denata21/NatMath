@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NatMath - Admin</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f5f7ff; }
+
+    /* NAVBAR */
+    .navbar {
+      height: 60px;
+      background: white;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      position: fixed;
+      top: 0; width: 100%;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .nav-brand { font-size: 1.3rem; font-weight: bold; color: #4f46e5; }
+    .nav-brand span { color: #ef4444; }
+    .logout-btn {
+      padding: 8px 16px;
+      background: #fee2e2;
+      color: #ef4444;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* LAYOUT */
+    .admin-container {
+      margin-top: 80px;
+      padding: 24px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .admin-container h2 {
+      color: #4f46e5;
+      margin-bottom: 24px;
+    }
+
+    /* TABS */
+    .admin-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .admin-tab {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      background: #f0f4ff;
+      color: #4f46e5;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .admin-tab.active {
+      background: #4f46e5;
+      color: white;
+      font-weight: bold;
+    }
+
+    /* SECTION */
+    .admin-section { display: none; }
+    .admin-section.active { display: block; }
+
+    .section-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .section-card h3 {
+      color: #333;
+      margin-bottom: 16px;
+      font-size: 1rem;
+    }
+
+    /* FORM */
+    .form-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .form-row input, .form-row select {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .form-row input:focus, .form-row select:focus {
+      border-color: #4f46e5;
+    }
+
+    .add-btn {
+      padding: 10px 20px;
+      background: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* LIST */
+    .item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .item-row:last-child { border-bottom: none; }
+
+    .item-info { display: flex; align-items: center; gap: 10px; }
+    .item-icon { font-size: 1.3rem; }
+    .item-name { font-size: 0.95rem; color: #333; }
+    .item-sub { font-size: 0.8rem; color: #888; }
+
+    .item-actions { display: flex; gap: 8px; }
+
+    .toggle-btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .toggle-btn.visible { background: #dcfce7; color: #16a34a; }
+    .toggle-btn.hidden { background: #fef9c3; color: #ca8a04; }
+
+    .delete-btn {
+      padding: 6px 12px;
+      background: #fee2e2;
+      color: #ef4444;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    /* MURID */
+    .murid-badge {
+      padding: 4px 10px;
+      background: #ede9fe;
+      color: #4f46e5;
+      border-radius: 20px;
+      font-size: 0.8rem;
+    }
+
+    .empty-msg {
+      text-align: center;
+      color: #aaa;
+      padding: 20px;
+      font-size: 0.9rem;
+    }
+
+    .loading { text-align: center; color: #888; padding: 20px; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-brand">📐 NatMath <span>Admin</span></div>
+  <button class="logout-btn" id="logoutBtn">Logout</button>
+</nav>
+
+<div class="admin-container">
+  <h2>⚙️ Panel Admin</h2>
+
+  <!-- TABS -->
+  <div class="admin-tabs">
+    <button class="admin-tab active" onclick="switchAdminTab('kelas', this)">📚 Kelas</button>
+    <button class="admin-tab" onclick="switchAdminTab('materi', this)">📖 Materi</button>
+    <button class="admin-tab" onclick="switchAdminTab('murid', this)">👥 Murid</button>
+  </div>
+
+  <!-- TAB KELAS -->
+  <div id="tab-kelas" class="admin-section active">
+    <div class="section-card">
+      <h3>➕ Tambah Kelas Baru</h3>
+      <div class="form-row">
+        <input type="text" id="inputNamaKelas" placeholder="Nama kelas (contoh: Kelas 10)">
+        <button class="add-btn" onclick="tambahKelas()">Tambah</button>
+      </div>
+    </div>
+    <div class="section-card">
+      <h3>📋 Daftar Kelas</h3>
+      <div id="listKelas"><div class="loading">Memuat...</div></div>
+    </div>
+  </div>
+
+  <!-- TAB MATERI -->
+  <div id="tab-materi" class="admin-section">
+    <div class="section-card">
+      <h3>➕ Tambah Materi Baru</h3>
+      <div class="form-row">
+        <select id="inputKelasMateri">
+          <option value="">Pilih Kelas...</option>
+        </select>
+        <input type="text" id="inputNamaMateri" placeholder="Nama materi">
+        <input type="text" id="inputIconMateri" placeholder="Icon (emoji)">
+        <button class="add-btn" onclick="tambahMateri()">Tambah</button>
+      </div>
+    </div>
+    <div class="section-card">
+      <h3>📋 Daftar Materi</h3>
+      <div id="listMateri"><div class="loading">Memuat...</div></div>
+    </div>
+  </div>
+
+  <!-- TAB MURID -->
+  <div id="tab-murid" class="admin-section">
+    <div class="section-card">
+      <h3>👥 Daftar Akun Murid</h3>
+      <div id="listMurid"><div class="loading">Memuat...</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { auth, db } from './firebase.js';
+  import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+  import {
+    collection, addDoc, getDocs, doc,
+    updateDoc, deleteDoc, query, where, orderBy
+  } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+  // Cek auth, kalau bukan admin redirect
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      window.location.href = 'login.html';
+      return;
+    }
+    // Load semua data
+    loadKelas();
+    loadMateri();
+    loadMurid();
+  });
+
+  // Logout
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    await signOut(auth);
+    window.location.href = 'login.html';
+  });
+
+  // Switch tab
+  window.switchAdminTab = function(tab, el) {
+    document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    el.classList.add('active');
+  }
+
+  // ================================
+  // KELAS
+  // ================================
+  window.tambahKelas = async function() {
+    const nama = document.getElementById('inputNamaKelas').value.trim();
+    if (!nama) return alert('Nama kelas tidak boleh kosong!');
+
+    await addDoc(collection(db, 'kelas'), {
+      nama: nama,
+      visible: true,
+      createdAt: new Date()
+    });
+
+    document.getElementById('inputNamaKelas').value = '';
+    loadKelas();
+    loadSelectKelas();
+  }
+
+  window.loadKelas = async function() {
+    const listEl = document.getElementById('listKelas');
+    const snapshot = await getDocs(collection(db, 'kelas'));
+
+    if (snapshot.empty) {
+      listEl.innerHTML = '<div class="empty-msg">Belum ada kelas.</div>';
+      return;
+    }
+
+    listEl.innerHTML = snapshot.docs.map(d => {
+      const k = d.data();
+      return `
+        <div class="item-row">
+          <div class="item-info">
+            <div class="item-icon">📚</div>
+            <div>
+              <div class="item-name">${k.nama}</div>
+            </div>
+          </div>
+          <div class="item-actions">
+            <button class="toggle-btn ${k.visible ? 'visible' : 'hidden'}"
+              onclick="toggleKelas('${d.id}', ${k.visible})">
+              ${k.visible ? '👁️ Tampil' : '🙈 Disembunyikan'}
+            </button>
+            <button class="delete-btn" onclick="hapusKelas('${d.id}')">🗑️ Hapus</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    loadSelectKelas();
+  }
+
+  window.toggleKelas = async function(id, current) {
+    await updateDoc(doc(db, 'kelas', id), { visible: !current });
+    loadKelas();
+  }
+
+  window.hapusKelas = async function(id) {
+    if (!confirm('Yakin hapus kelas ini? Materi di dalamnya juga ikut terhapus!')) return;
+    await deleteDoc(doc(db, 'kelas', id));
+    // Hapus semua materi di kelas ini
+    const materiSnap = await getDocs(query(collection(db, 'materi'), where('kelasId', '==', id)));
+    materiSnap.forEach(async (d) => await deleteDoc(doc(db, 'materi', d.id)));
+    loadKelas();
+    loadMateri();
+  }
+
+  async function loadSelectKelas() {
+    const select = document.getElementById('inputKelasMateri');
+    const snapshot = await getDocs(collection(db, 'kelas'));
+    select.innerHTML = '<option value="">Pilih Kelas...</option>';
+    snapshot.docs.forEach(d => {
+      select.innerHTML += `<option value="${d.id}">${d.data().nama}</option>`;
+    });
+  }
+
+  // ================================
+  // MATERI
+  // ================================
+  window.tambahMateri = async function() {
+    const kelasId = document.getElementById('inputKelasMateri').value;
+    const nama = document.getElementById('inputNamaMateri').value.trim();
+    const icon = document.getElementById('inputIconMateri').value.trim() || '📄';
+
+    if (!kelasId || !nama) return alert('Pilih kelas dan isi nama materi!');
+
+    await addDoc(collection(db, 'materi'), {
+      kelasId: kelasId,
+      nama: nama,
+      icon: icon,
+      visible: true,
+      konten: '',
+      createdAt: new Date()
+    });
+
+    document.getElementById('inputNamaMateri').value = '';
+    document.getElementById('inputIconMateri').value = '';
+    loadMateri();
+  }
+
+  window.loadMateri = async function() {
+    const listEl = document.getElementById('listMateri');
+    const kelasSnap = await getDocs(collection(db, 'kelas'));
+    const materiSnap = await getDocs(collection(db, 'materi'));
+
+    if (materiSnap.empty) {
+      listEl.innerHTML = '<div class="empty-msg">Belum ada materi.</div>';
+      return;
+    }
+
+    const kelasMap = {};
+    kelasSnap.docs.forEach(d => kelasMap[d.id] = d.data().nama);
+
+    listEl.innerHTML = materiSnap.docs.map(d => {
+      const m = d.data();
+      return `
+        <div class="item-row">
+          <div class="item-info">
+            <div class="item-icon">${m.icon}</div>
+            <div>
+              <div class="item-name">${m.nama}</div>
+              <div class="item-sub">${kelasMap[m.kelasId] || 'Kelas tidak ditemukan'}</div>
+            </div>
+          </div>
+          <div class="item-actions">
+            <button class="toggle-btn ${m.visible ? 'visible' : 'hidden'}"
+              onclick="toggleMateri('${d.id}', ${m.visible})">
+              ${m.visible ? '👁️ Tampil' : '🙈 Disembunyikan'}
+            </button>
+            <button class="delete-btn" onclick="hapusMateri('${d.id}')">🗑️ Hapus</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  window.toggleMateri = async function(id, current) {
+    await updateDoc(doc(db, 'materi', id), { visible: !current });
+    loadMateri();
+  }
+
+  window.hapusMateri = async function(id) {
+    if (!confirm('Yakin hapus materi ini?')) return;
+    await deleteDoc(doc(db, 'materi', id));
+    loadMateri();
+  }
+
+  // ================================
+  // MURID
+  // ================================
+  window.loadMurid = async function() {
+    const listEl = document.getElementById('listMurid');
+    const snapshot = await getDocs(query(collection(db, 'users'), where('role', '==', 'murid')));
+
+    if (snapshot.empty) {
+      listEl.innerHTML = '<div class="empty-msg">Belum ada murid yang daftar.</div>';
+      return;
+    }
+
+    listEl.innerHTML = snapshot.docs.map(d => {
+      const u = d.data();
+      return `
+        <div class="item-row">
+          <div class="item-info">
+            <div class="item-icon">👤</div>
+            <div>
+              <div class="item-name">${u.nama}</div>
+              <div class="item-sub">${u.email}</div>
+            </div>
+          </div>
+          <div class="item-actions">
+            <span class="murid-badge">Murid</span>
+            <button class="delete-btn" onclick="hapusMurid('${d.id}')">🗑️ Hapus</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  window.hapusMurid = async function(id) {
+    if (!confirm('Yakin hapus akun murid ini?')) return;
+    await deleteDoc(doc(db, 'users', id));
+    loadMurid();
+  }
+
+</script>
+
+</body>
+</html>
